@@ -30,17 +30,37 @@ type="text/javascript"></script>
 
 $(document).ready(function(){
 
+/*
+**	fundme.html by Rodney Sloan
+**	https://github.com/RodSloan/funding-bar
+**
+**	An animated bar. Displays how much cash people have given you. Yay cash!
+**	You could use it for pretty much anything.
+*/
+
 	/* Variables and Constants*/
+	var VERSION_NUMBER = "0.1"; //Current version of this file.
+	var CANVAS_WIDTH = 200;
+	var CANVAS_HEIGHT = 25;
+	var FPS = 30;
+
+   	
+	var iGOAL = 30000;  //This is the goal for the project
+	var iTotal = 1000; //This is the total collected so far
+	
 	var c = document.getElementById("fundingCanvas");
 	var canvas = c.getContext("2d");
 
+
+	// Returns the percentage you've recieved of your goal
 	function calculateFunding() {
-		var iTotal = 10000; //This is the total collected so far
-		var iGoal = 30000; //This is the goal for the project
-		return iTotal/iGoal*100;
+		return iTotal/iGOAL*100;
 	}
 
-	function drawFunding() {
+	// alert(calculateFunding());	// UNCOMMENT TO TEST
+
+	// Draws the bar
+	function drawBar() {
 		canvas.fillStyle = "#FF8800";
 
 		canvas.fillRect(0, 0, calculateFunding()*2, 50);
@@ -48,18 +68,40 @@ $(document).ready(function(){
 
 	}	
 
+	// Writes the percentage funded
 	function writeFunding() {
 		canvas.font = "12px Arial";
 		canvas.fillStyle = "#664400";
-		canvas.fillText(calculateFunding()+" %",5,16);
+		canvas.fillText(Math.round(calculateFunding())+" %",5,16);
 	}
 
-	
-	drawFunding();
-	writeFunding();
+	// Animates the bar, and anything else on the canvas
+	setInterval(function() {
+
+          update();
+
+          draw();
+
+        }, 1000/FPS);
+
+	// Any info updates happen here
+	function update() {
+		// Example
+		if (iTotal < iGOAL) iTotal+=50; //We wouldn't actually get the info from a DB
 	
 
-	//alert(calculateFunding()+"%");
+}
+
+	// All drawing is called here
+	function draw(){	
+		// Clear the screen	
+		canvas.fillStyle="#FFFFFF";
+		canvas.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+		// Write and draw all info
+		drawBar();
+		writeFunding();
+	}	
+
 }); 
 //]]>
 
@@ -71,11 +113,16 @@ $(document).ready(function(){
 <body>
 
 <header>
-    <h1>Current Funding</h1>
+    <h1>Dosh collected. Thanks backers!</h1>
 </header>
 
 <section> <canvas id="fundingCanvas" width="200" height="25" style="border:1px solid #FF8800;">
-Your browser does not support HTML 5. How about an update?
+<p>Hang on! Your browser doesn't support the &lt;canvas&gt; tag! How about an <a href="https://www.mozilla.org/en-
+
+US/firefox/new/">update</a>.</br>
+あなたのブラウザーは古いでしょう。<a href="https://support.mozilla.org/ja/kb/get-started-firefox-overview-main-features">アップグレ
+
+ード</a>いかがですか？</p>
 </canvas> </section>
 
 </body>
